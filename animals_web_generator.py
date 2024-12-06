@@ -1,5 +1,7 @@
 import json
 import os
+from html import escape
+
 print("Saving file to:", os.getcwd())
 
 
@@ -36,17 +38,19 @@ def generate_animal_html():
 def generate_animal_info(animals_data):
     animals_info = ""
     for animal in animals_data:
-        name = animal.get("name", "unknown")
-        diet = animal.get("characteristics", {}).get("diet", "unknown")
-        location = ", ".join(animal.get("locations", ["unknown"]))
-        type = animal.get("characteristics", {}).get("type", "unknown")
+        name = escape(animal.get("name", "unknown"))
+        diet = escape(animal.get("characteristics", {}).get("diet", "unknown"))
+        location = escape(", ".join(animal.get("locations", ["unknown"])))
+        type = escape(animal.get("characteristics", {}).get("type", "unknown"))
 
-        animals_info += '<li class="cards__item">'
-        animals_info += f"Name: {name}<br/>\n"
-        animals_info += f"Diet: {diet}<br/>\n"
-        animals_info += f"Location: {location}<br/>\n"
-        animals_info += f"Type: {type}<br/>\n"
-        animals_info += "</li>\n"
+        animals_info += '<li class="cards__item">\n'
+        animals_info += f'  <div class="card__title">{name}</div>\n'
+        animals_info += '  <p class="card__text">\n'
+        animals_info += f'      <strong>Diet:</strong> {diet}<br/>\n'
+        animals_info += f'      <strong>Location:</strong> {location}<br/>\n'
+        animals_info += f'      <strong>Type:</strong> {type}<br/>\n'
+        animals_info += '  </p>\n'
+        animals_info += '</li>\n'
 
     return animals_info
 
@@ -59,7 +63,7 @@ def write_animal_html(animals_info):
     html_template = generate_animal_html()
     html_output = html_template.replace("__REPLACE_ANIMALS_INFO__", animals_info)
 
-    with open("animals.html", "w") as output_file:
+    with open("animals.html", "w", encoding="utf-8") as output_file:
         output_file.write(html_output)
         print("File written successfully to animals.html")
 
