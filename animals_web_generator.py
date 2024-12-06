@@ -41,10 +41,12 @@ def generate_animal_info(animals_data):
         location = ", ".join(animal.get("locations", ["unknown"]))
         type = animal.get("characteristics", {}).get("type", "unknown")
 
-        animals_info += f"<li>Name: {name}<br>"
-        animals_info += f"Diet: {diet}<br>"
-        animals_info += f"Location: {location}<br>"
-        animals_info += f"Type: {type}</li>"
+        animals_info += '<li class="cards__item">'
+        animals_info += f"Name: {name}<br/>\n"
+        animals_info += f"Diet: {diet}<br/>\n"
+        animals_info += f"Location: {location}<br/>\n"
+        animals_info += f"Type: {type}<br/>\n"
+        animals_info += "</li>\n"
 
     return animals_info
 
