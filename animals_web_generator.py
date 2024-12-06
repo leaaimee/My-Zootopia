@@ -9,44 +9,24 @@ def load_data():
     with open("animals_data.json", "r") as handle:
         return json.load(handle)
 
-animals_data = load_data()
-
-
-def get_animal_data(animals_data):
-    """ unpack data from the json-file """
-    for animal in animals_data:
-        name = animal.get("name")
-        diet = animal.get("characteristics", {}).get("diet", "Unknown")
-        location = animal.get("characteristics").get("location",{}.get("location", "unknown"))
-        type = animal.get("characteristics", {}).get("type", "Unknown")
-
-        print(f"Name: {name}")
-        print(f"Diet: {diet}")
-        print(f"Location: {location}")
-        print(f"Type: {type}")
-        print("\n")
-
-get_animal_data(animals_data)
-
 
 def serialize_animal(animal_obj):
     """Serialize a single animal object into an HTML list item"""
     output = '<li class="cards__item">\n'
     output += f'  <div class="card__title">{animal_obj.get("name", "Unknown")}</div>\n'
     output += '  <p class="card__text">\n'
-    output += f'      <strong>Diet:</strong> {animal_obj.get("characteristics", {}).get("diet", "Unknown")}<br/>\n'
-    output += f'      <strong>Location:</strong> {", ".join(animal_obj.get("locations", ["Unknown"]))}<br/>\n'
-    output += f'      <strong>Type:</strong> {animal_obj.get("characteristics", {}).get("type", "Unknown")}<br/>\n'
+    output += '    <ul class="animal-info">\n'
+    output += f'      <li><strong>Scientific name:</strong> {animal_obj.get("characteristics", {}).get("scientific_name", "Unknown")}</li>\n'
+    output += f'      <li><strong>Diet:</strong> {animal_obj.get("characteristics", {}).get("diet", "Unknown")}</li>\n'
+    output += f'      <li><strong>Location:</strong> {", ".join(animal_obj.get("locations", ["Unknown"]))}</li>\n'
+    output += f'      <li><strong>Type:</strong> {animal_obj.get("characteristics", {}).get("type", "Unknown")}</li>\n'
+    output += f'      <li><strong>Name of young:</strong> {animal_obj.get("characteristics", {}).get("name_of_young", "Unknown")}</li>\n'
+    output += f'      <li><strong>Lifestyle:</strong> {animal_obj.get("characteristics", {}).get("lifestyle", "Unknown")}</li>\n'
+    output += f'      <li><strong>Skin type:</strong> {animal_obj.get("characteristics", {}).get("skin_type", "Unknown")}</li>\n'
+    output += '    </ul>\n'
     output += '  </p>\n'
     output += '</li>\n'
-
     return output
-
-
-def generate_animal_html():
-    with open("animals_template.html", "r") as template_file:
-        html_template = template_file.read()
-    return html_template
 
 
 def generate_animal_info(animals_data):
@@ -57,9 +37,15 @@ def generate_animal_info(animals_data):
     return animals_info
 
 
+def generate_animal_html():
+    """Generate HTML for all animals"""
+    with open("animals_template.html", "r") as template_file:
+        html_template = template_file.read()
+    return html_template
+
+
 def write_animal_html(animals_info):
     """Replaces placeholder in the template and writes to a file"""
-    animals_info = generate_animal_info(animals_data)
     html_template = generate_animal_html()
     html_output = html_template.replace("__REPLACE_ANIMALS_INFO__", animals_info)
 
@@ -67,7 +53,12 @@ def write_animal_html(animals_info):
         output_file.write(html_output)
         print("File written successfully to animals.html")
 
-get_animal_data(animals_data)
-write_animal_html(animals_data)
 
+def main():
+    """Main function to load data, generate HTML, and write to a file"""
+    animals_data = load_data()
+    animals_info = generate_animal_info(animals_data)
+    write_animal_html(animals_info)
 
+if __name__ == "__main__":
+    main()
